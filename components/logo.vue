@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex w-min"
+    class="logo__container relative flex w-min duration-100 ease-out hover:scale-110"
     :class="{
       'mb-5': currentSize.xl,
       'mb-[1.125rem]': currentSize.l,
@@ -20,7 +20,7 @@
       seven
     </div>
     <div
-      class="absolute bottom-[-16px] rounded-xl bg-white text-black"
+      class="logo__description absolute bottom-[-16px] rounded-xl bg-white text-black"
       :class="{
         'right-[-30px] px-[6px] text-base': currentSize.xl,
         'right-[-27px] px-[5.4px] text-[0.9rem]': currentSize.l,
@@ -51,3 +51,17 @@ const currentSize = ref({
   s: props.size === 's'
 })
 </script>
+
+<style scoped lang="scss">
+.logo {
+  &__container {
+    &:hover {
+      & .logo__description {
+        transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+        transition-duration: 150ms;
+        transform: rotate(-20deg);
+      }
+    }
+  }
+}
+</style>
