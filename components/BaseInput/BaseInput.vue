@@ -28,19 +28,10 @@
 <script setup lang="ts">
 import { InputType } from '@/types'
 import { inputTypes } from '@/utils'
-import { currentTypeSetter } from './types'
+import { currentTypeSetter, Props } from './types'
 
-const props = defineProps({
-  type: {
-    type: String as PropType<InputType>,
-    defaultValue: 'text'
-  },
-  placeholder: {
-    type: String
-  },
-  label: {
-    type: String
-  }
+const props = withDefaults(defineProps<Props>(), {
+  type: 'text'
 })
 
 const isPassword = props.type === inputTypes.password
