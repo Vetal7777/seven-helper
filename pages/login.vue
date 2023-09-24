@@ -14,7 +14,7 @@
               placeholder="Name"
               label="Name"
               class="min-w-[400px]"
-              v-if="isSignIn"
+              v-if="!isLogIn"
             />
           </Transition>
           <BaseInput placeholder="Email" label="Email" class="min-w-[400px]" />
@@ -28,26 +28,16 @@
 
         <BaseButton :title="buttonSubmitTitle" />
 
-        <div class="text-xs text-white">
-          <template v-if="isLogIn">
-            Doesn't have an account?
-            <button
-              class="text-slate-400 duration-200 ease-out hover:text-slate-300"
-              @click="toggleStatus"
-            >
-              Sign in
-            </button>
-          </template>
-
-          <template v-if="isSignIn">
-            Already have an account?
-            <button
-              class="text-slate-400 duration-200 ease-out hover:text-slate-300"
-              @click="toggleStatus"
-            >
-              Login
-            </button>
-          </template>
+        <div class="flex gap-1 text-xs text-white">
+          <div class="duration-100 ease-out hover:-translate-x-1">
+            {{ footerMessageTitle }}
+          </div>
+          <button
+            class="text-slate-400 duration-200 ease-out hover:text-slate-300"
+            @click="toggleStatus"
+          >
+            {{ footerButtonTitle }}
+          </button>
         </div>
       </div>
     </form>
@@ -63,16 +53,22 @@ definePageMeta({
   }
 })
 
-const isSignIn = ref(true)
 const isLogIn = ref(false)
 
 const buttonSubmitTitle = computed<string>(() =>
   isLogIn.value ? 'Login' : 'Sign in'
 )
 
+const footerMessageTitle = computed<string>(() =>
+  isLogIn.value ? "Doesn't have an account?" : 'Already have an account?'
+)
+
+const footerButtonTitle = computed<string>(() =>
+  isLogIn.value ? 'Sign in' : 'Login'
+)
+
 const toggleStatus = () => {
   isLogIn.value = !isLogIn.value
-  isSignIn.value = !isSignIn.value
 }
 
 const onSubmit = (event: Event) => {
