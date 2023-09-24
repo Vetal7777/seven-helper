@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col gap-2">
-    <label v-if="label" class="text-xs text-white">{{ label }}</label>
+    <label
+      v-if="label"
+      class="flex max-w-min text-xs text-white hover:scale-110"
+      >{{ label }}</label
+    >
     <div class="relative flex flex-col">
       <input
         :type="currentType || type"
