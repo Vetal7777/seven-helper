@@ -26,7 +26,7 @@
           />
         </div>
 
-        <BaseButton title="Submit" />
+        <BaseButton :title="buttonSubmitTitle" />
 
         <div class="text-xs text-white">
           <template v-if="isLogIn">
@@ -65,6 +65,10 @@ definePageMeta({
 
 const isSignIn = ref(true)
 const isLogIn = ref(false)
+
+const buttonSubmitTitle = computed<string>(() =>
+  isLogIn.value ? 'Login' : 'Sign in'
+)
 
 const toggleStatus = () => {
   isLogIn.value = !isLogIn.value

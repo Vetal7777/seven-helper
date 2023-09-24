@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-2">
     <label
       v-if="label"
-      class="flex max-w-min text-xs text-white hover:scale-110"
+      class="flex max-w-min text-xs text-white duration-100 ease-out hover:scale-110"
       >{{ label }}</label
     >
     <div class="relative flex flex-col">
