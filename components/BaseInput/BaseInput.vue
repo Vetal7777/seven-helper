@@ -7,7 +7,7 @@
     >
     <div class="relative flex flex-col">
       <input
-        :type="currentType || type"
+        :type="inputType"
         :placeholder="placeholder"
         class="w-full rounded-lg bg-slate-700 px-4 py-3 text-white outline-none duration-200 ease-in-out hover:bg-slate-600 focus:bg-slate-600"
       />
@@ -15,10 +15,10 @@
       <button
         v-if="isPassword"
         class="absolute bottom-0 right-3 top-0 flex items-center justify-center duration-200 ease-in-out hover:scale-110"
-        @click.prevent="toggleCurrentType"
+        @click.prevent="togglePasswordType"
       >
         <Icon
-          v-if="currentType === inputTypes.text"
+          v-if="showPassword"
           name="mdi:eye-off-outline"
           color="white"
           size="18px"
@@ -39,28 +39,31 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const isPassword = props.type === inputTypes.password
+const passwordType = ref<InputType>()
 
-const currentType = ref<InputType>()
+const inputType = computed<string>(() => passwordType.value || props.type)
+const showPassword = computed<boolean>(
+  () => isPassword && passwordType.value === inputTypes.text
+)
 
-const setCurrentType: currentTypeSetter = (type) => {
-  if (isPassword) {
-    currentType.value = type
-  }
+const setPasswordType: currentTypeSetter = (type) => {
+  passwordType.value = type
 }
-
-const toggleCurrentType = () => {
-  if (currentType.value === inputTypes.password) {
-    setCurrentType(inputTypes.text)
+const togglePasswordType = () => {
+  if (passwordType.value === inputTypes.password) {
+    setPasswordType(inputTypes.text)
     return
   }
 
-  if (currentType.value === inputTypes.text) {
-    setCurrentType(inputTypes.password)
+  if (passwordType.value === inputTypes.text) {
+    setPasswordType(inputTypes.password)
     return
   }
 }
 
 onMounted(() => {
-  setCurrentType(props.type!)
+  if (isPassword) {
+    setPasswordType(props.type)
+  }
 })
 </script>
