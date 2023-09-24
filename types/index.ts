@@ -9,5 +9,5 @@ export type LogoSizes = 'xl' | 'm' | 'l' | 's'
 export type InputType = 'text' | 'password'
 
 export type InputTypes = {
-  [key in InputType]: InputType
+  [key in InputType]: key
 }
