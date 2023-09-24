@@ -5,13 +5,13 @@
       <input
         :type="currentType || type"
         :placeholder="placeholder"
-        class="w-[400px] rounded-lg bg-slate-700 px-4 py-3 text-white outline-none duration-200 ease-in-out hover:bg-slate-600 focus:bg-slate-600"
+        class="w-full rounded-lg bg-slate-700 px-4 py-3 text-white outline-none duration-200 ease-in-out hover:bg-slate-600 focus:bg-slate-600"
       />
 
       <button
         v-if="isPassword"
         class="absolute bottom-0 right-3 top-0 flex items-center justify-center duration-200 ease-in-out hover:scale-110"
-        @click="toggleCurrentType"
+        @click.prevent="toggleCurrentType"
       >
         <Icon
           v-if="currentType === inputTypes.text"

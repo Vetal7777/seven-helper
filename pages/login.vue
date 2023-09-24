@@ -10,15 +10,24 @@
         <Logo size="xl" />
         <div class="relative flex flex-col gap-5 duration-100 ease-out">
           <Transition>
-            <BaseInput placeholder="Name" label="Name" v-if="isSignIn" />
+            <BaseInput
+              placeholder="Name"
+              label="Name"
+              class="min-w-[400px]"
+              v-if="isSignIn"
+            />
           </Transition>
-          <BaseInput placeholder="Email" label="Email" />
+          <BaseInput placeholder="Email" label="Email" class="min-w-[400px]" />
           <BaseInput
             :type="inputTypes.password"
             placeholder="Password"
             label="Password"
+            class="min-w-[400px]"
           />
         </div>
+
+        <BaseButton title="Submit" />
+
         <div class="text-xs text-white">
           <template v-if="isLogIn">
             Doesn't have an account?
