@@ -4,13 +4,17 @@
 
 <script setup lang="ts">
 import { ROUTES } from '@/routes'
+import { useFirebaseStore } from '@/store/firebase'
 import { useUserStore } from '@/store/user'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
+const firebaseStore = useFirebaseStore()
 const { user } = storeToRefs(userStore)
 
-onBeforeMount(() => {
+onMounted(() => {
+  firebaseStore.initApp()
+
   if (!user.value) {
     navigateTo(ROUTES.login)
   }

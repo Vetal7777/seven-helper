@@ -1,13 +1,21 @@
-import { firebaseConfig } from '@/firebase.config'
-import { FirebaseApp, initializeApp } from 'firebase/app'
-import { GoogleAuthProvider } from 'firebase/auth'
-import { defineStore } from 'pinia'
-import { User, userStore } from './types'
+import { useFirebaseStore } from '@/store/firebase'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { defineStore, storeToRefs } from 'pinia'
+import { User, createUserWithEmail, userStore } from './types'
 
 export const useUserStore = defineStore('user', (): userStore => {
-  const user = ref<User>(null)
-  const firebaseApp: FirebaseApp = initializeApp(firebaseConfig)
-  const googleProvider: GoogleAuthProvider = new GoogleAuthProvider()
+  const firebaseStore = useFirebaseStore()
 
-  return { user }
+  const user = ref<User>(null)
+  const { firebaseApp, firebaseAuth } = storeToRefs(firebaseStore)
+
+  const createUserWithEmail: createUserWithEmail = ({ email, password }) => {
+    try {
+      if (firebaseAuth.value) {
+        createUserWithEmailAndPassword(firebaseAuth.value, email, password)
+      }
+    } catch (error) {}
+  }
+
+  return { user, createUserWithEmail }
 })
