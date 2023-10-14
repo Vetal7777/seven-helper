@@ -6,4 +6,5 @@ export interface Props {
   type?: InputType
   placeholder: string
   label: string
+  modelValue: string
 }

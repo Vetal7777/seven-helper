@@ -1,6 +1,10 @@
-import { InputTypes } from '@/types'
+import { InputTypes, LoginPageStatusKey } from '@/types'
 
-export const inputTypes: InputTypes = {
+export const INPUT_TYPE: InputTypes = {
   password: 'password',
   text: 'text'
+}
+export const LOGIN_PAGE_STATUS: LoginPageStatusKey = {
+  login: 'login',
+  signIn: 'signIn'
 }

@@ -7,6 +7,7 @@
     >
     <div class="relative flex flex-col">
       <input
+        v-model="value"
         :type="inputType"
         :placeholder="placeholder"
         class="w-full rounded-lg bg-slate-700 px-4 py-3 text-white outline-none duration-200 ease-in-out hover:bg-slate-600 focus:bg-slate-600"
@@ -30,33 +31,41 @@
 </template>
 
 <script setup lang="ts">
-import { InputType } from '@/types'
-import { inputTypes } from '@/utils'
-import { currentTypeSetter, Props } from './types'
+import { InputType, PasswordTypeData } from '@/types'
+import { INPUT_TYPE } from '@/utils'
+import { Props, currentTypeSetter } from './types'
 
+const emit = defineEmits(['update:modelValue'])
 const props = withDefaults(defineProps<Props>(), {
   type: 'text'
 })
-
-const isPassword = props.type === inputTypes.password
+const isPassword = props.type === INPUT_TYPE.password
 const passwordType = ref<InputType>()
+const passwordTypeData = computed<PasswordTypeData>(() => ({
+  [INPUT_TYPE.password]: passwordType.value === INPUT_TYPE.password,
+  [INPUT_TYPE.text]: passwordType.value === INPUT_TYPE.text
+}))
 
 const inputType = computed<string>(() => passwordType.value || props.type)
 const showPassword = computed<boolean>(
-  () => isPassword && passwordType.value === inputTypes.text
+  () => isPassword && passwordTypeData.value[INPUT_TYPE.text]
 )
+const value = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
+})
 
 const setPasswordType: currentTypeSetter = (type) => {
   passwordType.value = type
 }
 const togglePasswordType = () => {
-  if (passwordType.value === inputTypes.password) {
-    setPasswordType(inputTypes.text)
+  if (passwordTypeData.value[INPUT_TYPE.password]) {
+    setPasswordType(INPUT_TYPE.text)
     return
   }
 
-  if (passwordType.value === inputTypes.text) {
-    setPasswordType(inputTypes.password)
+  if (passwordType.value === INPUT_TYPE.text) {
+    setPasswordType(INPUT_TYPE.password)
     return
   }
 }
