@@ -14,14 +14,3 @@ export type InputTypes = {
 export type PasswordTypeData = {
   [key in InputType]: boolean
 }
-export type FormData = {
-  email: string
-  password: string
-}
-export type LoginPageStatus = 'login' | 'signIn'
-export type LoginPageStatusKey = {
-  [key in LoginPageStatus]: key
-}
-export type LoginPageStatusData = {
-  [key in LoginPageStatus]: boolean
-}
