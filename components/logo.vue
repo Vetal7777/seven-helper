@@ -1,6 +1,6 @@
 <template>
   <div
-    class="logo__container relative flex w-min duration-100 ease-out hover:scale-110"
+    class="logo__container flex w-min duration-100 ease-out hover:scale-110"
     :class="{
       'mb-5': currentSize.xl,
       'mb-[1.125rem]': currentSize.l,
@@ -9,26 +9,28 @@
     }"
   >
     <div
-      class="text-white"
+      class="relative text-white"
       :class="{
-        'text-5xl': currentSize.xl,
-        'text-[2.7rem] leading-[0.9]': currentSize.l,
-        'text-[2.25rem] leading-[0.75]': currentSize.m,
-        'text-[1.5rem] leading-[0.5]': currentSize.s
+        'min-w-[137px] text-5xl': currentSize.xl,
+        'min-w-[123px] text-[2.7rem] leading-[0.9]': currentSize.l,
+        'min-w-[104px] text-[2.25rem] leading-[0.75]': currentSize.m,
+        'min-w-[68px] text-[1.5rem] leading-[0.5]': currentSize.s
       }"
     >
       seven
-    </div>
-    <div
-      class="logo__description absolute bottom-[-16px] rounded-xl bg-white text-black"
-      :class="{
-        'right-[-30px] px-[6px] text-base': currentSize.xl,
-        'right-[-27px] px-[5.4px] text-[0.9rem]': currentSize.l,
-        'right-[-22.5px] px-[4.5px] text-[0.75rem]': currentSize.m,
-        'right-[-15px] px-[3px] text-[0.5rem]': currentSize.s
-      }"
-    >
-      wallet
+      <div
+        class="logo__description absolute right-0 rounded-xl bg-white text-black"
+        :class="{
+          'bottom-[-16px] px-[6px] text-base': currentSize.xl,
+          'bottom-[-14.4px] px-[5.4px] text-[0.9rem] leading-[1.3]':
+            currentSize.l,
+          'bottom-[-14px] px-[4.5px] text-[0.75rem] leading-[1.3]':
+            currentSize.m,
+          'bottom-[-13px] px-[3px] text-[0.5rem] leading-[1.3]': currentSize.s
+        }"
+      >
+        helper
+      </div>
     </div>
   </div>
 </template>
