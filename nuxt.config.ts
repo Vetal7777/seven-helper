@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', 'nuxt-icon'],
   app: {
     head: {
-      title: 'Seven english'
+      title: 'Seven helper'
     }
   }
 })
