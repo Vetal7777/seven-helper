@@ -1,4 +1,4 @@
-import { InputTypes } from '@/types'
+import type { InputTypes } from '@/types'
 
 export const INPUT_TYPE: InputTypes = {
   password: 'password',

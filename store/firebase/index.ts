@@ -1,8 +1,8 @@
 import { firebaseConfig } from '@/firebase.config'
-import { FirebaseApp, initializeApp } from 'firebase/app'
-import { Auth, getAuth } from 'firebase/auth'
+import { initializeApp, type FirebaseApp } from 'firebase/app'
+import { getAuth, type Auth } from 'firebase/auth'
 import { defineStore } from 'pinia'
-import { firebaseStore } from './types'
+import type { firebaseStore } from './types'
 
 export const useFirebaseStore = defineStore('firebase', (): firebaseStore => {
   const firebaseApp = ref<null | FirebaseApp>(null)
