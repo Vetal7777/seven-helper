@@ -6,5 +6,6 @@ export const INPUT_TYPE: InputTypes = {
 }
 
 export const STORAGE_KEYS = {
-  googleRedirect: 'googleRedirect'
+  googleRedirect: 'googleRedirect',
+  user: 'user'
 }

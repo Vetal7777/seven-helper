@@ -6,18 +6,18 @@ import {
   getRedirectResult,
   signInWithRedirect
 } from 'firebase/auth'
-import { defineStore, storeToRefs } from 'pinia'
+import { defineStore } from 'pinia'
 import type { User, userStore } from './types'
+import { ROUTES } from '~/routes'
 
 export const useUserStore = defineStore('user', (): userStore => {
+  const user = ref<User | null>(null)
+  const router = useRouter()
   const firebaseStore = useFirebaseStore()
 
-  const user = ref<User>(null)
-  const { firebaseApp } = storeToRefs(firebaseStore)
-
   const signInWithGoogle = async () => {
-    const auth = getAuth()
     const provider = new GoogleAuthProvider()
+    const auth = getAuth()
 
     signInWithRedirect(auth, provider)
     localStorage.setItem(STORAGE_KEYS.googleRedirect, String(true))
@@ -25,29 +25,36 @@ export const useUserStore = defineStore('user', (): userStore => {
 
   const getRedirectUser = async () => {
     const auth = getAuth()
-    getRedirectResult(auth)
-      .then((result) => {
-        localStorage.removeItem(STORAGE_KEYS.googleRedirect)
-        // This gives you a Google Access Token. You can use it to access Google APIs.
-        const credential = GoogleAuthProvider.credentialFromResult(result)
-        const token = credential.accessToken
+    const res = await getRedirectResult(auth)
 
-        // The signed-in user info.
-        const user = result.user
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code
-        const errorMessage = error.message
-        // The email of the user's account used.
-        const email = error.customData.email
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error)
-        // ...
-      })
+    localStorage.removeItem(STORAGE_KEYS.googleRedirect)
+
+    try {
+      if (!res) throw new Error('Failed to get redirect result')
+
+      const { displayName: name, email, photoURL, uid: id } = res.user
+      const currentUser = { name, email, photoURL, id }
+      user.value = currentUser
+
+      sessionStorage.setItem(STORAGE_KEYS.user, JSON.stringify(currentUser))
+    } catch (error) {
+      console.error(error)
+    }
   }
+
+  onBeforeMount(async () => {
+    if (!user.value) {
+      const storagedUser = sessionStorage.getItem(STORAGE_KEYS.user)
+
+      if (storagedUser) {
+        user.value = JSON.parse(storagedUser)
+      } else {
+        if (router.currentRoute.value.path !== ROUTES.login) {
+          navigateTo(ROUTES.login)
+        }
+      }
+    }
+  })
 
   return { user, signInWithGoogle, getRedirectUser }
 })

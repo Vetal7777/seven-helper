@@ -1,6 +1,10 @@
 export type userStore = {
-  user: User
+  user: Ref<User | null>
   signInWithGoogle: () => void
-  getRedirectUser: () => void
+  getRedirectUser: () => Promise<void>
 }
-export type User = {} | null
+export type User = {
+  name: string
+  email: string
+  photoURL: string
+}

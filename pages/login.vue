@@ -3,7 +3,7 @@
     <div
       class="flex h-screen grow items-center justify-center bg-login bg-cover"
     >
-      <Logo size="m" class="absolute left-4 top-4" />
+      <Logo size="l" class="absolute left-4 top-4" />
       <form
         class="flex flex-col items-center gap-9 rounded-md bg-white p-10 shadow-xl"
         @submit.prevent

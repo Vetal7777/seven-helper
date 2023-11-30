@@ -10,24 +10,18 @@ import { STORAGE_KEYS } from '@/utils'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
-const firebaseStore = useFirebaseStore()
 const { user } = storeToRefs(userStore)
 
-const checkRedirectStatus = () => {
+const checkRedirectStatus = async () => {
   const redirect = localStorage.getItem(STORAGE_KEYS.googleRedirect)
 
   if (redirect) {
-    userStore.getRedirectUser()
+    await userStore.getRedirectUser()
   }
 }
 
 onBeforeMount(async () => {
-  firebaseStore.initApp()
   await checkRedirectStatus()
-
-  if (!user.value) {
-    navigateTo(ROUTES.login)
-  }
 })
 </script>
 
