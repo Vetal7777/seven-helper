@@ -6,14 +6,24 @@
 import { ROUTES } from '@/routes'
 import { useFirebaseStore } from '@/store/firebase'
 import { useUserStore } from '@/store/user'
+import { STORAGE_KEYS } from '@/utils'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
 const firebaseStore = useFirebaseStore()
 const { user } = storeToRefs(userStore)
 
-onMounted(() => {
+const checkRedirectStatus = () => {
+  const redirect = localStorage.getItem(STORAGE_KEYS.googleRedirect)
+
+  if (redirect) {
+    userStore.getRedirectUser()
+  }
+}
+
+onBeforeMount(async () => {
   firebaseStore.initApp()
+  await checkRedirectStatus()
 
   if (!user.value) {
     navigateTo(ROUTES.login)

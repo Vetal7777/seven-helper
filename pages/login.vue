@@ -19,6 +19,7 @@
             <template #children> GitHub </template>
           </BaseButton>
           <BaseButton
+            @click="userStore.signInWithGoogle"
             class="flex max-h-[44px] w-40 items-center justify-center gap-2 bg-red-500 font-semibold"
           >
             <template #children> Google </template>
