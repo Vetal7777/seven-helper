@@ -1,31 +1,31 @@
 <template>
   <div class="flex h-screen w-screen">
-    <form
+    <div
       class="flex h-screen grow items-center justify-center bg-login bg-cover"
-      @submit.prevent
     >
-      <div
-        class="flex flex-col items-center gap-5 rounded-2xl bg-gradient-to-br from-gray-700 to-black p-10"
+      <Logo size="s" class="absolute left-4 top-4" />
+      <form
+        class="flex flex-col items-center gap-9 rounded-md bg-white p-10 shadow-xl"
+        @submit.prevent
       >
-        <Logo size="xl" />
-        <div class="flex flex-col gap-4">
+        <header class="flex flex-col items-center justify-center gap-4">
+          <h1 class="text-3xl font-semibold">Log In</h1>
+          <p class="text-sm text-slate-400">We are happy to see you back!</p>
+        </header>
+        <div class="flex flex-wrap items-center justify-center gap-4">
           <BaseButton
-            class="flex min-w-[300px] items-center justify-center gap-2"
+            class="flex max-h-[44px] w-40 items-center justify-center gap-2 bg-black font-semibold"
           >
-            <template #title>
-              <Icon name="uil:github" color="black" size="20px" />
-            </template>
+            <template #children> GitHub </template>
           </BaseButton>
           <BaseButton
-            class="flex min-w-[300px] items-center justify-center gap-2"
+            class="flex max-h-[44px] w-40 items-center justify-center gap-2 bg-red-500 font-semibold"
           >
-            <template #title>
-              <Icon name="grommet-icons:google" color="black" size="20px" />
-            </template>
+            <template #children> Google </template>
           </BaseButton>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 

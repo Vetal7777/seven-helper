@@ -1,6 +1,6 @@
 <template>
   <div
-    class="logo__container flex w-min duration-100 ease-out hover:scale-110"
+    class="logo__container flex w-min cursor-default duration-100 ease-out hover:scale-110"
     :class="{
       'mb-5': currentSize.xl,
       'mb-[1.125rem]': currentSize.l,
@@ -9,7 +9,7 @@
     }"
   >
     <div
-      class="relative text-white"
+      class="relative text-black"
       :class="{
         'min-w-[137px] text-5xl': currentSize.xl,
         'min-w-[123px] text-[2.7rem] leading-[0.9]': currentSize.l,
@@ -19,7 +19,7 @@
     >
       seven
       <div
-        class="logo__description absolute right-0 rounded-xl bg-white text-black"
+        class="logo__description absolute right-0 rounded-xl bg-sky-400 text-white"
         :class="{
           'bottom-[-16px] px-[6px] text-base': currentSize.xl,
           'bottom-[-14.4px] px-[5.4px] text-[0.9rem] leading-[1.3]':
@@ -36,11 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { LogoSizes } from '@/types'
-
 const props = defineProps({
   size: {
-    type: String as PropType<LogoSizes>,
+    type: String,
     default: 'xl',
     require: false
   }
