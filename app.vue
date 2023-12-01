@@ -3,25 +3,19 @@
 </template>
 
 <script setup lang="ts">
-import { ROUTES } from '@/routes'
-import { useFirebaseStore } from '@/store/firebase'
 import { useUserStore } from '@/store/user'
-import { STORAGE_KEYS } from '@/utils'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
-const checkRedirectStatus = async () => {
-  const redirect = localStorage.getItem(STORAGE_KEYS.googleRedirect)
-
-  if (redirect) {
-    await userStore.getRedirectUser()
-  }
-}
-
 onBeforeMount(async () => {
-  await checkRedirectStatus()
+  const initUser = Boolean(user.value)
+
+  if (!initUser) {
+    userStore.loadUserFromStorage()
+    userStore.checkRedirectStatus()
+  }
 })
 </script>
 

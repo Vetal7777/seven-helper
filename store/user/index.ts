@@ -1,5 +1,5 @@
 import { useFirebaseStore } from '@/store/firebase'
-import { STORAGE_KEYS } from '@/utils'
+import { STORAGE_KEYS_DATA } from '@/utils'
 import {
   GoogleAuthProvider,
   getAuth,
@@ -7,54 +7,78 @@ import {
   signInWithRedirect
 } from 'firebase/auth'
 import { defineStore } from 'pinia'
-import type { User, userStore } from './types'
 import { ROUTES } from '~/routes'
+import type { User, userStore } from './types'
 
 export const useUserStore = defineStore('user', (): userStore => {
-  const user = ref<User | null>(null)
+  const user = ref<User>(null)
   const router = useRouter()
   const firebaseStore = useFirebaseStore()
 
-  const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider()
-    const auth = getAuth()
+  const checkRedirectStatus = async () => {
+    const redirect = localStorage.getItem(STORAGE_KEYS_DATA.googleRedirect)
 
-    signInWithRedirect(auth, provider)
-    localStorage.setItem(STORAGE_KEYS.googleRedirect, String(true))
+    if (redirect) {
+      await getRedirectUser()
+    }
   }
 
   const getRedirectUser = async () => {
     const auth = getAuth()
     const res = await getRedirectResult(auth)
 
-    localStorage.removeItem(STORAGE_KEYS.googleRedirect)
+    localStorage.removeItem(STORAGE_KEYS_DATA.googleRedirect)
 
     try {
       if (!res) throw new Error('Failed to get redirect result')
 
       const { displayName: name, email, photoURL, uid: id } = res.user
-      const currentUser = { name, email, photoURL, id }
+      const currentUser = { name, email, photoURL, id } as User
+
       user.value = currentUser
 
-      sessionStorage.setItem(STORAGE_KEYS.user, JSON.stringify(currentUser))
+      saveUserInStorage(currentUser)
+      redirectToMainSys()
     } catch (error) {
       console.error(error)
     }
   }
 
-  onBeforeMount(async () => {
-    if (!user.value) {
-      const storagedUser = sessionStorage.getItem(STORAGE_KEYS.user)
+  const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider()
+    const auth = getAuth()
 
-      if (storagedUser) {
-        user.value = JSON.parse(storagedUser)
-      } else {
-        if (router.currentRoute.value.path !== ROUTES.login) {
-          navigateTo(ROUTES.login)
-        }
-      }
+    signInWithRedirect(auth, provider)
+    localStorage.setItem(STORAGE_KEYS_DATA.googleRedirect, String(true))
+  }
+
+  const saveUserInStorage = (user: User) => {
+    sessionStorage.setItem(STORAGE_KEYS_DATA.user, JSON.stringify(user))
+  }
+
+  const loadUserFromStorage = () => {
+    const storagedUser = sessionStorage.getItem(STORAGE_KEYS_DATA.user)
+
+    if (storagedUser) {
+      user.value = JSON.parse(storagedUser)
+
+      redirectToMainSys()
+    } else {
+      redirectToLoginUser()
     }
-  })
+  }
 
-  return { user, signInWithGoogle, getRedirectUser }
+  const redirectToMainSys = () => {
+    if (router.currentRoute.value.path === ROUTES.login) {
+      navigateTo(ROUTES.home)
+    }
+  }
+
+  const redirectToLoginUser = () => {
+    if (router.currentRoute.value.path !== ROUTES.login) {
+      navigateTo(ROUTES.login)
+    }
+  }
+
+  return { user, loadUserFromStorage, checkRedirectStatus, signInWithGoogle }
 })
