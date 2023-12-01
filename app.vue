@@ -1,5 +1,6 @@
 <template>
-  <NuxtPage />
+  <Loader v-if="loading" />
+  <NuxtPage v-else />
 </template>
 
 <script setup lang="ts">
@@ -8,6 +9,7 @@ import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+const loading = ref(true)
 
 onBeforeMount(async () => {
   const initUser = Boolean(user.value)

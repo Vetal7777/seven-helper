@@ -2,7 +2,7 @@ export type Routes = {
   [key in RouteNames]: string
 }
 
-export type RouteNames = 'home' | 'login'
+export type RouteNames = 'home' | 'auth'
 
 export type InputType = 'text' | 'password'
 

@@ -69,14 +69,14 @@ export const useUserStore = defineStore('user', (): userStore => {
   }
 
   const redirectToMainSys = () => {
-    if (router.currentRoute.value.path === ROUTES.login) {
+    if (router.currentRoute.value.path === ROUTES.auth) {
       navigateTo(ROUTES.home)
     }
   }
 
   const redirectToLoginUser = () => {
-    if (router.currentRoute.value.path !== ROUTES.login) {
-      navigateTo(ROUTES.login)
+    if (router.currentRoute.value.path !== ROUTES.auth) {
+      navigateTo(ROUTES.auth)
     }
   }
 
