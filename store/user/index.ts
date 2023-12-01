@@ -1,3 +1,4 @@
+import { useAppStore } from '@/store/app'
 import { useFirebaseStore } from '@/store/firebase'
 import { STORAGE_KEYS_DATA } from '@/utils'
 import {
@@ -6,19 +7,22 @@ import {
   getRedirectResult,
   signInWithRedirect
 } from 'firebase/auth'
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { ROUTES } from '~/routes'
 import type { User, userStore } from './types'
 
 export const useUserStore = defineStore('user', (): userStore => {
   const user = ref<User>(null)
   const router = useRouter()
+  const appStore = useAppStore()
   const firebaseStore = useFirebaseStore()
+  const { isLoading } = storeToRefs(appStore)
 
   const checkRedirectStatus = async () => {
     const redirect = localStorage.getItem(STORAGE_KEYS_DATA.googleRedirect)
 
     if (redirect) {
+      isLoading.value = true
       await getRedirectUser()
     }
   }
@@ -38,7 +42,8 @@ export const useUserStore = defineStore('user', (): userStore => {
       user.value = currentUser
 
       saveUserInStorage(currentUser)
-      redirectToMainSys()
+      navigateTo(ROUTES.home)
+      isLoading.value = false
     } catch (error) {
       console.error(error)
     }
@@ -53,16 +58,18 @@ export const useUserStore = defineStore('user', (): userStore => {
   }
 
   const saveUserInStorage = (user: User) => {
-    sessionStorage.setItem(STORAGE_KEYS_DATA.user, JSON.stringify(user))
+    localStorage.setItem(STORAGE_KEYS_DATA.user, JSON.stringify(user))
   }
 
   const loadUserFromStorage = () => {
-    const storagedUser = sessionStorage.getItem(STORAGE_KEYS_DATA.user)
+    const storagedUser = localStorage.getItem(STORAGE_KEYS_DATA.user)
 
     if (storagedUser) {
+      isLoading.value = true
       user.value = JSON.parse(storagedUser)
 
       redirectToMainSys()
+      isLoading.value = false
     } else {
       redirectToLoginUser()
     }

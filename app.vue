@@ -1,15 +1,18 @@
 <template>
-  <Loader v-if="loading" />
-  <NuxtPage v-else />
+  <Loader v-show="isLoading" />
+  <NuxtPage />
 </template>
 
 <script setup lang="ts">
+import { useAppStore } from '@/store/app'
 import { useUserStore } from '@/store/user'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
+const appStore = useAppStore()
+
 const { user } = storeToRefs(userStore)
-const loading = ref(true)
+const { isLoading } = storeToRefs(appStore)
 
 onBeforeMount(async () => {
   const initUser = Boolean(user.value)
@@ -17,6 +20,8 @@ onBeforeMount(async () => {
   if (!initUser) {
     userStore.loadUserFromStorage()
     userStore.checkRedirectStatus()
+  } else {
+    isLoading.value = false
   }
 })
 </script>
