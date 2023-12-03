@@ -99,6 +99,7 @@ export const useUserStore = defineStore('user', (): userStore => {
       }
     } else {
       redirectToLoginUser()
+      appStore.cancelLoadingStatus()
     }
   }
 
