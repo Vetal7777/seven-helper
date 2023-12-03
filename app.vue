@@ -18,7 +18,7 @@ onBeforeMount(async () => {
   const initUser = Boolean(user.value)
 
   if (!initUser) {
-    userStore.loadUserFromStorage()
+    userStore.loadUserFromDatabase()
     userStore.checkRedirectStatus()
   } else {
     isLoading.value = false

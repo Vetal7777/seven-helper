@@ -15,7 +15,7 @@ import { ROUTES } from '~/routes'
 import type { User, userStore } from './types'
 
 export const useUserStore = defineStore('user', (): userStore => {
-  const user = ref<User>(null)
+  const user = ref<User | null>(null)
   const router = useRouter()
   const appStore = useAppStore()
   const firebaseStore = useFirebaseStore()
@@ -36,20 +36,27 @@ export const useUserStore = defineStore('user', (): userStore => {
 
     localStorage.removeItem(STORAGE_KEYS_DATA.authRedirect)
 
-    try {
-      if (!res) throw new Error('Failed to get redirect result')
+    if (!res) throw new Error('Failed to get redirect result')
 
-      const { displayName: name, email, photoURL, uid: id } = res.user
-      const currentUser = { name, email, photoURL, id } as User
+    const { displayName: name, email, photoURL, uid: id } = res.user
+    const currentUser = { name, email, photoURL, id } as User
+
+    saveUserIdInStorage(currentUser.id)
+
+    const userFromDatabase = await firebaseStore.getUserFromDatabase(
+      currentUser.id
+    )
+
+    if (!userFromDatabase) {
+      await firebaseStore.addUserToDatabase(currentUser)
 
       user.value = currentUser
-
-      saveUserInStorage(currentUser)
-      navigateTo(ROUTES.home)
-      isLoading.value = false
-    } catch (error) {
-      isLoading.value = false
+    } else {
+      user.value = userFromDatabase
     }
+
+    navigateTo(ROUTES.home)
+    appStore.cancelLoadingStatus()
   }
 
   const signInWithRedirect = (auth: Auth, provider: AuthProvider) => {
@@ -71,19 +78,25 @@ export const useUserStore = defineStore('user', (): userStore => {
     signInWithRedirect(auth, provider)
   }
 
-  const saveUserInStorage = (user: User) => {
-    localStorage.setItem(STORAGE_KEYS_DATA.user, JSON.stringify(user))
+  const saveUserIdInStorage = (id: string) => {
+    localStorage.setItem(STORAGE_KEYS_DATA.userId, id)
   }
 
-  const loadUserFromStorage = () => {
-    const storagedUser = localStorage.getItem(STORAGE_KEYS_DATA.user)
+  const loadUserFromDatabase = async () => {
+    isLoading.value = true
+    const userId = localStorage.getItem(STORAGE_KEYS_DATA.userId)
 
-    if (storagedUser) {
-      isLoading.value = true
-      user.value = JSON.parse(storagedUser)
+    if (userId) {
+      const userFromDatabase = await firebaseStore.getUserFromDatabase(userId)
 
-      redirectToMainSys()
-      appStore.cancelLoadingStatus()
+      if (userFromDatabase) {
+        user.value = userFromDatabase
+        redirectToMainSys()
+        appStore.cancelLoadingStatus()
+      } else {
+        redirectToLoginUser()
+        appStore.cancelLoadingStatus()
+      }
     } else {
       redirectToLoginUser()
     }
@@ -103,7 +116,7 @@ export const useUserStore = defineStore('user', (): userStore => {
 
   return {
     user,
-    loadUserFromStorage,
+    loadUserFromDatabase,
     checkRedirectStatus,
     signInWithGoogle,
     signInWithGitHub
