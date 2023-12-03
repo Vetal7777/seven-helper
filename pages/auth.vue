@@ -15,6 +15,7 @@
         <div class="flex flex-wrap items-center justify-center gap-4">
           <BaseButton
             class="flex max-h-[44px] w-40 items-center justify-center gap-2 bg-black font-semibold"
+            @click="userStore.signInWithGitHub"
           >
             <template #children> GitHub </template>
           </BaseButton>

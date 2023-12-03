@@ -2,10 +2,13 @@ import { useAppStore } from '@/store/app'
 import { useFirebaseStore } from '@/store/firebase'
 import { STORAGE_KEYS_DATA } from '@/utils'
 import {
+  Auth,
+  AuthProvider,
+  GithubAuthProvider,
   GoogleAuthProvider,
   getAuth,
   getRedirectResult,
-  signInWithRedirect
+  signInWithRedirect as signInWithFirebaseRedirect
 } from 'firebase/auth'
 import { defineStore, storeToRefs } from 'pinia'
 import { ROUTES } from '~/routes'
@@ -19,7 +22,7 @@ export const useUserStore = defineStore('user', (): userStore => {
   const { isLoading } = storeToRefs(appStore)
 
   const checkRedirectStatus = async () => {
-    const redirect = localStorage.getItem(STORAGE_KEYS_DATA.googleRedirect)
+    const redirect = localStorage.getItem(STORAGE_KEYS_DATA.authRedirect)
 
     if (redirect) {
       isLoading.value = true
@@ -31,7 +34,7 @@ export const useUserStore = defineStore('user', (): userStore => {
     const auth = getAuth()
     const res = await getRedirectResult(auth)
 
-    localStorage.removeItem(STORAGE_KEYS_DATA.googleRedirect)
+    localStorage.removeItem(STORAGE_KEYS_DATA.authRedirect)
 
     try {
       if (!res) throw new Error('Failed to get redirect result')
@@ -45,8 +48,13 @@ export const useUserStore = defineStore('user', (): userStore => {
       navigateTo(ROUTES.home)
       isLoading.value = false
     } catch (error) {
-      console.error(error)
+      isLoading.value = false
     }
+  }
+
+  const signInWithRedirect = (auth: Auth, provider: AuthProvider) => {
+    signInWithFirebaseRedirect(auth, provider)
+    localStorage.setItem(STORAGE_KEYS_DATA.authRedirect, String(true))
   }
 
   const signInWithGoogle = async () => {
@@ -54,7 +62,13 @@ export const useUserStore = defineStore('user', (): userStore => {
     const auth = getAuth()
 
     signInWithRedirect(auth, provider)
-    localStorage.setItem(STORAGE_KEYS_DATA.googleRedirect, String(true))
+  }
+
+  const signInWithGitHub = async () => {
+    const provider = new GithubAuthProvider()
+    const auth = getAuth()
+
+    signInWithRedirect(auth, provider)
   }
 
   const saveUserInStorage = (user: User) => {
@@ -69,7 +83,7 @@ export const useUserStore = defineStore('user', (): userStore => {
       user.value = JSON.parse(storagedUser)
 
       redirectToMainSys()
-      isLoading.value = false
+      appStore.cancelLoadingStatus()
     } else {
       redirectToLoginUser()
     }
@@ -87,5 +101,11 @@ export const useUserStore = defineStore('user', (): userStore => {
     }
   }
 
-  return { user, loadUserFromStorage, checkRedirectStatus, signInWithGoogle }
+  return {
+    user,
+    loadUserFromStorage,
+    checkRedirectStatus,
+    signInWithGoogle,
+    signInWithGitHub
+  }
 })
