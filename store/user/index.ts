@@ -56,7 +56,7 @@ export const useUserStore = defineStore('user', (): userStore => {
     }
 
     navigateTo(ROUTES.home)
-    appStore.cancelLoadingStatus()
+    isLoading.value = false
   }
 
   const signInWithRedirect = (auth: Auth, provider: AuthProvider) => {
@@ -92,14 +92,14 @@ export const useUserStore = defineStore('user', (): userStore => {
       if (userFromDatabase) {
         user.value = userFromDatabase
         redirectToMainSys()
-        appStore.cancelLoadingStatus()
+        isLoading.value = false
       } else {
         redirectToLoginUser()
-        appStore.cancelLoadingStatus()
+        isLoading.value = false
       }
     } else {
       redirectToLoginUser()
-      appStore.cancelLoadingStatus()
+      isLoading.value = false
     }
   }
 
