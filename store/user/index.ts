@@ -8,8 +8,7 @@ import {
   GoogleAuthProvider,
   getAuth,
   getRedirectResult,
-  signInWithRedirect as signInWithFirebaseRedirect,
-  signOut as signOutFirebase
+  signInWithRedirect as signInWithFirebaseRedirect
 } from 'firebase/auth'
 import { defineStore, storeToRefs } from 'pinia'
 import { ROUTES } from '~/routes'
@@ -22,14 +21,19 @@ export const useUserStore = defineStore('user', (): userStore => {
   const firebaseStore = useFirebaseStore()
   const { isLoading } = storeToRefs(appStore)
 
-  const deleteUserIdInStorage = () => {
-    localStorage.removeItem(STORAGE_KEYS_DATA.userId)
-    user.value = null
+  const checkRedirectStatus = async () => {
+    const redirect = localStorage.getItem(STORAGE_KEYS_DATA.authRedirect)
+
+    if (redirect) {
+      await getRedirectUser()
+    }
   }
 
   const getRedirectUser = async () => {
     const auth = getAuth()
     const res = await getRedirectResult(auth)
+
+    localStorage.removeItem(STORAGE_KEYS_DATA.authRedirect)
 
     if (!res) {
       navigateTo(ROUTES.auth)
@@ -48,6 +52,7 @@ export const useUserStore = defineStore('user', (): userStore => {
 
     if (!userFromDatabase) {
       await firebaseStore.addUserToDatabase(currentUser)
+
       user.value = currentUser
     } else {
       user.value = userFromDatabase
@@ -58,6 +63,7 @@ export const useUserStore = defineStore('user', (): userStore => {
 
   const signInWithRedirect = (auth: Auth, provider: AuthProvider) => {
     signInWithFirebaseRedirect(auth, provider)
+    localStorage.setItem(STORAGE_KEYS_DATA.authRedirect, String(true))
   }
 
   const signInWithGoogle = async () => {
@@ -65,7 +71,6 @@ export const useUserStore = defineStore('user', (): userStore => {
     const auth = getAuth()
 
     signInWithRedirect(auth, provider)
-    await getRedirectUser()
   }
 
   const signInWithGitHub = async () => {
@@ -73,14 +78,6 @@ export const useUserStore = defineStore('user', (): userStore => {
     const auth = getAuth()
 
     signInWithRedirect(auth, provider)
-    await getRedirectUser()
-  }
-
-  const signOut = () => {
-    const auth = getAuth()
-    signOutFirebase(auth)
-    deleteUserIdInStorage()
-    navigateTo(ROUTES.auth)
   }
 
   const saveUserIdInStorage = (id: string) => {
@@ -119,8 +116,8 @@ export const useUserStore = defineStore('user', (): userStore => {
   return {
     user,
     loadUserFromDatabase,
+    checkRedirectStatus,
     signInWithGoogle,
-    signInWithGitHub,
-    signOut
+    signInWithGitHub
   }
 })

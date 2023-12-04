@@ -9,7 +9,7 @@ const APP_ARTICLE = 'seven__'
 
 const buildStorageKey = (key: string) => `${APP_ARTICLE}${key}`
 
-const STORAGE_KEYS = ['userId']
+const STORAGE_KEYS = ['authRedirect', 'userId']
 const DATABASE_KEYS = ['users']
 
 const buildStorageKeysData = Object.fromEntries(
