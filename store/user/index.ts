@@ -36,7 +36,12 @@ export const useUserStore = defineStore('user', (): userStore => {
 
     localStorage.removeItem(STORAGE_KEYS_DATA.authRedirect)
 
-    if (!res) throw new Error('Failed to get redirect result')
+    if (!res) {
+      navigateTo(ROUTES.auth)
+      isLoading.value = false
+      throw new Error('Failed to get redirect result')
+      return
+    }
 
     const { displayName: name, email, photoURL, uid: id } = res.user
     const currentUser = { name, email, photoURL, id } as User
