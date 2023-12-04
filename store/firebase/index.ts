@@ -9,6 +9,7 @@ import {
   setDoc
 } from 'firebase/firestore'
 import { defineStore } from 'pinia'
+import { DATABASE_KEYS_DATA } from '~/utils'
 import type { firebaseStore } from './types'
 
 export const useFirebaseStore = defineStore('firebase', (): firebaseStore => {
@@ -23,13 +24,13 @@ export const useFirebaseStore = defineStore('firebase', (): firebaseStore => {
   const addUserToDatabase = async (user: User) => {
     if (!database.value) throw new Error('Database is not init')
 
-    await setDoc(doc(database.value, 'users', user.id), user)
+    await setDoc(doc(database.value, DATABASE_KEYS_DATA.users, user.id), user)
   }
 
   const getUserFromDatabase = async (id: string) => {
     if (!database.value) throw new Error('Database is not init')
 
-    const docRef = doc(database.value, 'users', id)
+    const docRef = doc(database.value, DATABASE_KEYS_DATA.users, id)
     const docSnap = await getDoc(docRef)
     const user = docSnap.data() as User | undefined
 
