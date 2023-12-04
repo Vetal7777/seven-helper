@@ -1,6 +1,8 @@
 <template>
   <Loader v-show="isLoading" />
-  <NuxtPage />
+  <VApp>
+    <NuxtPage />
+  </VApp>
 </template>
 
 <script setup lang="ts">
@@ -30,7 +32,7 @@ onBeforeMount(async () => {
 }
 
 .slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .slide-fade-enter-from,
