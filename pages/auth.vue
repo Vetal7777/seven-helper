@@ -35,7 +35,7 @@
 import { useUserStore } from '@/store/user'
 definePageMeta({
   pageTransition: {
-    name: 'rotate'
+    name: 'slide-fade'
   }
 })
 const userStore = useUserStore()
