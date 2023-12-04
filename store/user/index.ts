@@ -8,7 +8,8 @@ import {
   GoogleAuthProvider,
   getAuth,
   getRedirectResult,
-  signInWithRedirect as signInWithFirebaseRedirect
+  signInWithRedirect as signInWithFirebaseRedirect,
+  signOut as signOutFirebase
 } from 'firebase/auth'
 import { defineStore, storeToRefs } from 'pinia'
 import { ROUTES } from '~/routes'
@@ -21,24 +22,17 @@ export const useUserStore = defineStore('user', (): userStore => {
   const firebaseStore = useFirebaseStore()
   const { isLoading } = storeToRefs(appStore)
 
-  const checkRedirectStatus = async () => {
-    const redirect = localStorage.getItem(STORAGE_KEYS_DATA.authRedirect)
-
-    if (redirect) {
-      isLoading.value = true
-      await getRedirectUser()
-    }
+  const deleteUserIdInStorage = () => {
+    localStorage.removeItem(STORAGE_KEYS_DATA.userId)
+    user.value = null
   }
 
   const getRedirectUser = async () => {
     const auth = getAuth()
     const res = await getRedirectResult(auth)
 
-    localStorage.removeItem(STORAGE_KEYS_DATA.authRedirect)
-
     if (!res) {
       navigateTo(ROUTES.auth)
-      isLoading.value = false
       throw new Error('Failed to get redirect result')
       return
     }
@@ -54,19 +48,16 @@ export const useUserStore = defineStore('user', (): userStore => {
 
     if (!userFromDatabase) {
       await firebaseStore.addUserToDatabase(currentUser)
-
       user.value = currentUser
     } else {
       user.value = userFromDatabase
     }
 
     navigateTo(ROUTES.home)
-    isLoading.value = false
   }
 
   const signInWithRedirect = (auth: Auth, provider: AuthProvider) => {
     signInWithFirebaseRedirect(auth, provider)
-    localStorage.setItem(STORAGE_KEYS_DATA.authRedirect, String(true))
   }
 
   const signInWithGoogle = async () => {
@@ -74,6 +65,7 @@ export const useUserStore = defineStore('user', (): userStore => {
     const auth = getAuth()
 
     signInWithRedirect(auth, provider)
+    await getRedirectUser()
   }
 
   const signInWithGitHub = async () => {
@@ -81,6 +73,14 @@ export const useUserStore = defineStore('user', (): userStore => {
     const auth = getAuth()
 
     signInWithRedirect(auth, provider)
+    await getRedirectUser()
+  }
+
+  const signOut = () => {
+    const auth = getAuth()
+    signOutFirebase(auth)
+    deleteUserIdInStorage()
+    navigateTo(ROUTES.auth)
   }
 
   const saveUserIdInStorage = (id: string) => {
@@ -88,7 +88,6 @@ export const useUserStore = defineStore('user', (): userStore => {
   }
 
   const loadUserFromDatabase = async () => {
-    isLoading.value = true
     const userId = localStorage.getItem(STORAGE_KEYS_DATA.userId)
 
     if (userId) {
@@ -97,14 +96,11 @@ export const useUserStore = defineStore('user', (): userStore => {
       if (userFromDatabase) {
         user.value = userFromDatabase
         redirectToMainSys()
-        isLoading.value = false
       } else {
         redirectToLoginUser()
-        isLoading.value = false
       }
     } else {
       redirectToLoginUser()
-      isLoading.value = false
     }
   }
 
@@ -123,8 +119,8 @@ export const useUserStore = defineStore('user', (): userStore => {
   return {
     user,
     loadUserFromDatabase,
-    checkRedirectStatus,
     signInWithGoogle,
-    signInWithGitHub
+    signInWithGitHub,
+    signOut
   }
 })

@@ -19,7 +19,6 @@ onBeforeMount(async () => {
 
   if (!initUser) {
     userStore.loadUserFromDatabase()
-    userStore.checkRedirectStatus()
   }
 })
 </script>
