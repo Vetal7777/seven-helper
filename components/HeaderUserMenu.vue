@@ -3,12 +3,14 @@
     <template v-slot:activator="{ props }">
       <div
         v-bind="props"
-        class="user-header flex cursor-pointer items-center gap-3 text-xs text-black"
+        class="user-menu flex cursor-pointer items-center gap-3 text-xs text-black"
       >
-        {{ user?.name }}
+        <div class="user-name">
+          {{ user?.name }}
+        </div>
         <img
           :src="user?.photoURL"
-          class="user-photo h-8 w-8 cursor-pointer rounded-full transition-all"
+          class="user-photo h-8 w-8 cursor-pointer rounded-full"
         />
       </div>
     </template>
@@ -54,10 +56,21 @@ const menu = [
 .user {
   &-photo {
     border: 1px solid transparent;
+    transition: all 200ms ease;
   }
 
-  &-header:hover &-photo {
-    border-color: #62baf3;
+  &-name {
+    transition: all 200ms ease;
+  }
+
+  &-menu:hover {
+    .user-photo {
+      border-color: #62baf3;
+    }
+
+    .user-name {
+      transform: translateX(-5px);
+    }
   }
 }
 </style>
