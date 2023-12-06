@@ -84,6 +84,12 @@ export const useUserStore = defineStore('user', (): userStore => {
     localStorage.setItem(STORAGE_KEYS_DATA.userId, id)
   }
 
+  const signOut = () => {
+    debugger
+    user.value = null
+    localStorage.removeItem(STORAGE_KEYS_DATA.userId)
+    navigateTo(ROUTES.auth)
+  }
   const loadUserFromDatabase = async () => {
     const userId = localStorage.getItem(STORAGE_KEYS_DATA.userId)
 
@@ -118,6 +124,7 @@ export const useUserStore = defineStore('user', (): userStore => {
     loadUserFromDatabase,
     checkRedirectStatus,
     signInWithGoogle,
-    signInWithGitHub
+    signInWithGitHub,
+    signOut
   }
 })

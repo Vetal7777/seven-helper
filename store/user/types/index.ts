@@ -6,6 +6,7 @@ export type userStore = {
   loadUserFromDatabase: () => void
   signInWithGoogle: () => void
   signInWithGitHub: () => Promise<void>
+  signOut: () => void
 }
 export type User = {
   name: string
