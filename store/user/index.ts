@@ -85,7 +85,6 @@ export const useUserStore = defineStore('user', (): userStore => {
   }
 
   const signOut = () => {
-    debugger
     user.value = null
     localStorage.removeItem(STORAGE_KEYS_DATA.userId)
     navigateTo(ROUTES.auth)
