@@ -9,10 +9,10 @@
         @submit.prevent
       >
         <header class="flex flex-col items-center justify-center gap-4">
-          <h1 class="text-3xl font-semibold">Log In</h1>
+          <article class="text-3xl font-semibold">Log In</article>
           <p class="text-sm text-slate-400">We are happy to see you back!</p>
         </header>
-        <div class="flex flex-wrap items-center justify-center gap-4">
+        <main class="flex flex-wrap items-center justify-center gap-4">
           <BaseButton
             class="flex max-h-[44px] w-40 items-center justify-center gap-2 bg-black font-semibold"
             @click="userStore.signInWithGitHub"
@@ -35,7 +35,7 @@
               </div>
             </template>
           </BaseButton>
-        </div>
+        </main>
       </form>
     </div>
   </div>
