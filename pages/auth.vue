@@ -17,13 +17,23 @@
             class="flex max-h-[44px] w-40 items-center justify-center gap-2 bg-black font-semibold"
             @click="userStore.signInWithGitHub"
           >
-            <template #children> GitHub </template>
+            <template #children>
+              <div class="grid grid-flow-col grid-cols-3 items-center">
+                <Icon name="uil:github" color="white" size="17px" />
+                <p class="translate-x-2">GitHub</p>
+              </div>
+            </template>
           </BaseButton>
           <BaseButton
             @click="userStore.signInWithGoogle"
             class="flex max-h-[44px] w-40 items-center justify-center gap-2 bg-red-500 font-semibold"
           >
-            <template #children> Google </template>
+            <template #children>
+              <div class="grid grid-flow-col grid-cols-3 items-center">
+                <Icon name="grommet-icons:google" color="white" size="14px" />
+                <p class="translate-x-2">Google</p>
+              </div>
+            </template>
           </BaseButton>
         </div>
       </form>
