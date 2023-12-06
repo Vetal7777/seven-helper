@@ -5,7 +5,7 @@
       @click="navigateTo(ROUTES.home)"
       size="m"
     />
-    <HeaderUserMenu />
+    <UserMenu />
   </div>
 </template>
 
