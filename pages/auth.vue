@@ -13,28 +13,33 @@
           <p class="text-sm text-slate-400">We are happy to see you back!</p>
         </header>
         <main class="flex flex-wrap items-center justify-center gap-4">
-          <BaseButton
-            class="flex max-h-[44px] w-40 items-center justify-center gap-2 bg-black font-semibold"
+          <v-btn
+            class="lighten-1 text-none font-weight-bold w-40 rounded-sm bg-black text-white"
+            variant="flat"
+            size="large"
             @click="userStore.signInWithGitHub"
           >
-            <template #children>
-              <div class="grid grid-flow-col grid-cols-3 items-center">
-                <Icon name="uil:github" color="white" size="17px" />
-                <p class="translate-x-2">GitHub</p>
-              </div>
+            <template #prepend>
+              <Icon class="mr-5" name="uil:github" color="white" size="17px" />
             </template>
-          </BaseButton>
-          <BaseButton
+            GitHub
+          </v-btn>
+          <v-btn
+            class="bg-red-lighten-1 text-none font-weight-bold w-40 rounded-sm text-white"
+            variant="flat"
+            size="large"
             @click="userStore.signInWithGoogle"
-            class="flex max-h-[44px] w-40 items-center justify-center gap-2 bg-red-500 font-semibold"
           >
-            <template #children>
-              <div class="grid grid-flow-col grid-cols-3 items-center">
-                <Icon name="grommet-icons:google" color="white" size="14px" />
-                <p class="translate-x-2">Google</p>
-              </div>
+            <template #prepend>
+              <Icon
+                class="mr-5"
+                name="grommet-icons:google"
+                color="white"
+                size="14px"
+              />
             </template>
-          </BaseButton>
+            Google
+          </v-btn>
         </main>
       </form>
     </div>
