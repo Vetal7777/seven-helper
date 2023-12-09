@@ -14,9 +14,15 @@
         />
       </div>
     </template>
-    <v-list>
-      <v-list-item v-for="({ title, handler }, key) in menu" :key="key">
-        <v-list-item-title @click="handler">{{ title }}</v-list-item-title>
+    <v-list class="menu-list mt-4">
+      <v-list-item
+        class="menu-item cursor-pointer"
+        v-for="({ title, handler }, key) in menu"
+        :key="key"
+      >
+        <v-list-item-title class="menu-title" @click="handler">{{
+          title
+        }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>
@@ -39,17 +45,18 @@ const menu = [
 
 <style lang="scss" scoped>
 .v-menu > .v-overlay__content > .v-list {
-  margin-top: 1rem;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
-.v-list-item--density-default.v-list-item--one-line {
-  min-height: 20px;
-}
-.v-list-item-title {
-  font-size: 0.8rem;
-  &:hover {
-    color: rgb(56 189 248 / 1);
-    cursor: pointer;
+.menu {
+  &-list {
+    padding: 0;
+  }
+  &-title {
+    font-size: 0.8rem;
+
+    &:hover {
+      color: rgb(56 189 248 / 1);
+    }
   }
 }
 
