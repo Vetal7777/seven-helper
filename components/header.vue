@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between p-4 text-white">
+  <div class="flex items-center justify-between text-white">
     <Logo
       class="cursor-pointer hover:ml-1"
       @click="navigateTo(ROUTES.home)"

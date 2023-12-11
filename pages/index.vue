@@ -1,5 +1,7 @@
 <template>
-  <MainLayout />
+  <MainLayout>
+    <main class="flex flex-col items-center"></main>
+  </MainLayout>
 </template>
 
 <script setup lang="ts">
